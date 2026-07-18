@@ -5,7 +5,7 @@ function SearchBar({ search, setSearch }) {
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="🔍 Cari todo..."
+        placeholder="Cari todo..."
       />
     </div>
   )

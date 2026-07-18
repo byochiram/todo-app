@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { CATEGORIES, CATEGORY_LABELS } from '../constants'
 
-function TodoForm({ addTodo, categories, categoryLabels }) {
+function TodoForm({ addTodo }) {
   const [expanded, setExpanded] = useState(false)
   const [title, setTitle] = useState('')
   const [priority, setPriority] = useState('medium')
@@ -8,16 +9,20 @@ function TodoForm({ addTodo, categories, categoryLabels }) {
   const [deadlineTime, setDeadlineTime] = useState('')
   const [category, setCategory] = useState('kerja')
 
+  const resetForm = () => {
+    setTitle('')
+    setPriority('medium')
+    setDeadline('')
+    setDeadlineTime('')
+    setCategory('kerja')
+    setExpanded(false)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (title.trim()) {
       addTodo({ title: title.trim(), priority, deadline, deadlineTime, category })
-      setTitle('')
-      setPriority('medium')
-      setDeadline('')
-      setDeadlineTime('')
-      setCategory('kerja')
-      setExpanded(false)
+      resetForm()
     }
   }
 
@@ -41,20 +46,12 @@ function TodoForm({ addTodo, categories, categoryLabels }) {
             <option value="low">Rendah</option>
           </select>
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{categoryLabels[cat]}</option>
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
             ))}
           </select>
-          <input
-            type="date"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
-          />
-          <input
-            type="time"
-            value={deadlineTime}
-            onChange={(e) => setDeadlineTime(e.target.value)}
-          />
+          <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
+          <input type="time" value={deadlineTime} onChange={(e) => setDeadlineTime(e.target.value)} />
         </div>
       )}
     </form>

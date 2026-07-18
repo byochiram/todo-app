@@ -1,4 +1,4 @@
-const CACHE_NAME = 'todo-app-v1'
+const CACHE_NAME = 'todo-app-v2'
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -26,22 +26,24 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return
+  if (event.request.url.includes('localhost')) return
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response
+  const url = new URL(event.request.url)
+  const isStaticAsset = STATIC_ASSETS.some(a => url.pathname === a) || url.pathname.match(/\.(svg|png|ico|woff2?)$/)
+
+  if (isStaticAsset) {
+    event.respondWith(
+      caches.match(event.request).then((cached) => cached || fetch(event.request))
+    )
+  } else {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone()
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
         }
-        const clone = response.clone()
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
         return response
-      })
-    }).catch(() => {
-      if (event.request.destination === 'document') {
-        return caches.match('/')
-      }
-    })
-  )
+      }).catch(() => caches.match(event.request))
+    )
+  }
 })

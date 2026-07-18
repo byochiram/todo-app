@@ -10,6 +10,7 @@ import SearchBar from '../components/SearchBar'
 import Stats from '../components/Stats'
 import EmptyState from '../components/EmptyState'
 import { CheckIcon, DownloadIcon } from '../components/Icons'
+import ThemeToggle from '../components/ThemeToggle'
 
 function TodosPage() {
   const { todos, setTodos, addTodo, toggleComplete, deleteTodo, updateTodo, clearCompleted, restoreTodos } = useTodos()
@@ -90,7 +91,10 @@ function TodosPage() {
             <h1><span className="logo-icon"><CheckIcon /></span> Todo</h1>
             <p>Sederhanakan harimu, selesaikan satu per satu</p>
           </div>
-          <button className="btn-export" onClick={handleExport} title="Export JSON"><DownloadIcon /> Export</button>
+          <div className="header-actions">
+            <ThemeToggle />
+            <button className="btn-export" onClick={handleExport} title="Export JSON"><DownloadIcon /> Export</button>
+          </div>
         </div>
       </div>
 
